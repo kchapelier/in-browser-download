@@ -41,7 +41,7 @@ var download = require('in-browser-download');
 
 // set base64string to a valid base64 string somehow
 
-download(base64string, 'binary-file.dat, 'application/binary', 'base64');
+download(base64string, 'binary-file.dat', 'application/binary', 'base64');
 ```
 
 ## API
@@ -52,10 +52,10 @@ download (data, filename, mimeType, encoding);
 
 ### Arguments
 
- * data : The content of the file to download as a string or an ArrayBuffer.
- * filename : The name of the file to download.
- * mimeType : Optional. The mime-type of the file to download, defaults to either text/plain or application/binary depending on the type of the data.
- * encoding : Optional. The encoding to use, defaults to 'charset=utf8' with a string data, ignored with an ArrayBuffer.
+ * **data :** The content of the file to download as a string or an ArrayBuffer.
+ * **filename :** The name of the file to download.
+ * **mimeType :** Optional. The mime-type of the file to download, defaults to either text/plain or application/binary depending on the type of the data.
+ * **encoding :** Optional. The encoding to use, defaults to 'charset=utf8' with a string data, ignored with an ArrayBuffer.
 
 ## History
 
