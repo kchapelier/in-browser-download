@@ -38,11 +38,11 @@ download(buffer, 'binary-file.dat');
 
 ### download(data, filename)
 
-Force the download of the data as a file with the given filename.
+Force the download of the given data as a file with the given filename.
 
 **Arguments**
 
- * **data :** The content of the file to download as a string or an ArrayBuffer.
+ * **data :** The content of the file to download as a blob, a string or an ArrayBuffer.
  * **filename :** The name of the file to download.
 
 ### download.isSupported()
