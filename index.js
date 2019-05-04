@@ -1,31 +1,97 @@
 "use strict";
 
-var datauriDownload = require('datauri-download'),
-    isArrayBuffer = require('is-array-buffer'),
-    arraybufferToBase64 = require('base64-arraybuffer').encode;
+let element = null;
+let textEncoder = null;
 
 /**
- * Download a string or an ArrayBuffer as a file in the browser
+ * Get an anchor element.
+ *
+ * @returns {HTMLElement}
+ */
+function getElement () {
+  if (element === null) {
+    element = document.createElement('a');
+    element.innerText = 'Download';
+    element.style.position = 'absolute';
+    element.style.top = '-100px';
+    element.style.left = '0px';
+  }
+
+  return element;
+}
+
+/**
+ * Get an instance of TextEncoder.
+ *
+ * @returns {TextEncoder}
+ */
+function getTextEncoder () {
+  if (textEncoder === null) {
+    textEncoder = new TextEncoder();
+  }
+
+  return textEncoder;
+}
+
+/**
+ * Return an object URL based on the given data.
+ *
+ * @param {string|Blob|ArrayBuffer} data
+ *
+ * @returns {*}
+ */
+function getObjectUrl (data) {
+  let blob;
+
+  if (typeof data === 'object' && data.constructor.name === 'Blob') {
+    blob = data;
+  } else if (typeof data === 'string') {
+    blob = new Blob([getTextEncoder().encode(data).buffer], {
+      type: 'application/octet-stream'
+    });
+  } else if (typeof data === 'object' && data.constructor && data.constructor.name === 'ArrayBuffer') {
+    blob = new Blob([data], {
+      type: 'application/octet-stream'
+    });
+  } else {
+    throw new Error('in-browser-download: Data must either be a Blob, a string or an ArrayBuffer');
+  }
+
+  return URL.createObjectURL(blob);
+}
+
+/**
+ * Download a Blob, a string or an ArrayBuffer as a file in the browser
+ *
  * @param {string|ArrayBuffer} data The content of the file to download.
  * @param {string} [filename] The name of the file to download.
- * @param {string} [mimeType] The mime-type of the file to download, defaults to either text/plain or application/binary depending on the type of the data.
- * @param {string} [encoding] The encoding to use, defaults to 'charset=utf8' with a string data, ignored with an ArrayBuffer.
  */
-var download = function download (data, filename, mimeType, encoding) {
-    if (typeof data === 'string') {
-        filename = filename || 'download.txt';
-        mimeType = mimeType || 'text/plain';
-        encoding = encoding || 'charset=utf8';
-    } else if (isArrayBuffer(data)) {
-        filename = filename || 'download.dat';
-        mimeType = mimeType || 'application/binary';
-        encoding = 'base64';
-        data = arraybufferToBase64(data);
-    } else {
-        throw new Error('Data must either be a string or an ArrayBuffer');
-    }
+function download (data, filename) {
+  const element = getElement();
+  const url = getObjectUrl(data);
 
-    datauriDownload(filename, mimeType + ';' + encoding, data);
+  element.setAttribute('href', url);
+  element.setAttribute('download', filename);
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+
+  setTimeout(function () {
+    URL.revokeObjectURL(url);
+  }, 100);
+}
+
+/**
+ * Check if all the required APIs are supported by the browser.
+ *
+ * @returns {boolean}
+ */
+download.isSupported = function () {
+  return (
+    !!window['TextEncoder'] &&
+    !!window['Blob'] &&
+    !!window['URL'] && typeof URL.createObjectURL === 'function' && typeof URL.revokeObjectURL === 'function'
+  );
 };
 
 module.exports = download;

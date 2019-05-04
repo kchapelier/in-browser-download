@@ -1,7 +1,7 @@
 {
   "name": "in-browser-download",
-  "version": "1.0.0",
-  "description": "Download a string or an ArrayBuffer as a file in the browser",
+  "version": "2.0.0",
+  "description": "Download a Blob, a string or an ArrayBuffer as a file in the browser.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,15 +10,20 @@
     "type": "git",
     "url": "git+https://github.com/kchapelier/in-browser-download.git"
   },
+  "keywords": [
+    "download",
+    "file",
+    "save",
+    "browser"
+  ],
+  "files": [
+    "index.js"
+  ],
   "author": "Kevin Chapelier",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kchapelier/in-browser-download/issues"
   },
   "homepage": "https://github.com/kchapelier/in-browser-download#readme",
-  "dependencies": {
-    "base64-arraybuffer": "^0.1.5",
-    "datauri-download": "^0.1.3",
-    "is-array-buffer": "^0.1.0"
-  }
+  "dependencies": {}
 }
